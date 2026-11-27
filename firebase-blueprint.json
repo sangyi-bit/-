@@ -1,0 +1,202 @@
+{
+  "entities": {
+    "PatrolLog": {
+      "title": "PatrolLog",
+      "description": "A single campus or classroom patrol inspection record with photo thumbnail, voice transcript, and structured form fields.",
+      "type": "object",
+      "properties": {
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "Firebase Auth UID of the inspector who created the log."
+        },
+        "ownerName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Display name of the inspector."
+        },
+        "locationName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "description": "Classroom or campus location name (e.g., 三年二班教室, 操場東側)."
+        },
+        "zoneCategory": {
+          "type": "string",
+          "enum": ["教室教學", "校園環境", "安全設施", "學生秩序", "其他場域"],
+          "description": "Campus zone category."
+        },
+        "patrolStatus": {
+          "type": "string",
+          "enum": ["正常良好", "需追蹤提醒", "異常待修"],
+          "description": "Inspection status."
+        },
+        "followUpResolved": {
+          "type": "boolean",
+          "description": "Whether any follow-up item has been resolved."
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 600,
+          "description": "Concise structured summary of the patrol inspection."
+        },
+        "observations": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "Detailed structured observations from photo and voice dictation."
+        },
+        "transcript": {
+          "type": "string",
+          "maxLength": 3000,
+          "description": "Original verbatim voice dictation transcript or notes."
+        },
+        "actionItems": {
+          "type": "array",
+          "description": "List of recommended follow-up action items (max 10 items)."
+        },
+        "teacherOrUnit": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Related teacher, class, or campus office/unit."
+        },
+        "photoDataUrl": {
+          "type": "string",
+          "maxLength": 350000,
+          "description": "Compressed JPEG data URL thumbnail of the patrol location."
+        },
+        "monthKey": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}$",
+          "description": "Year-month grouping key (YYYY-MM) for monthly report compilation."
+        },
+        "patrolDateStr": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+          "description": "Patrol date string (YYYY-MM-DD)."
+        },
+        "patrolTimeStr": {
+          "type": "string",
+          "pattern": "^[0-9]{2}:[0-9]{2}$",
+          "description": "Patrol time string (HH:MM)."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server last-updated timestamp."
+        }
+      },
+      "required": [
+        "ownerId",
+        "ownerName",
+        "locationName",
+        "zoneCategory",
+        "patrolStatus",
+        "followUpResolved",
+        "summary",
+        "observations",
+        "transcript",
+        "actionItems",
+        "teacherOrUnit",
+        "photoDataUrl",
+        "monthKey",
+        "patrolDateStr",
+        "patrolTimeStr",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "MonthlyReport": {
+      "title": "MonthlyReport",
+      "description": "AI-compiled monthly patrol summary report for an inspector and month.",
+      "type": "object",
+      "properties": {
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "Firebase Auth UID of the report owner."
+        },
+        "monthKey": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}$",
+          "description": "Year-month key (YYYY-MM)."
+        },
+        "totalCount": {
+          "type": "integer",
+          "description": "Total patrol entries in this month."
+        },
+        "normalCount": {
+          "type": "integer",
+          "description": "Entries with normal status."
+        },
+        "followUpCount": {
+          "type": "integer",
+          "description": "Entries needing follow-up."
+        },
+        "issueCount": {
+          "type": "integer",
+          "description": "Entries with issues needing repair."
+        },
+        "executiveSummary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000,
+          "description": "Synthesized executive overview for the month."
+        },
+        "keyHighlights": {
+          "type": "array",
+          "description": "Key findings across campus zones (max 10 items)."
+        },
+        "recommendations": {
+          "type": "array",
+          "description": "Actionable recommendations for next month (max 10 items)."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server last-updated timestamp."
+        }
+      },
+      "required": [
+        "ownerId",
+        "monthKey",
+        "totalCount",
+        "normalCount",
+        "followUpCount",
+        "issueCount",
+        "executiveSummary",
+        "keyHighlights",
+        "recommendations",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/patrolLogs/{logId}": {
+      "schema": {
+        "$ref": "#/entities/PatrolLog"
+      },
+      "description": "Individual campus/classroom patrol inspection logs owned by authenticated inspectors."
+    },
+    "/monthlyReports/{reportId}": {
+      "schema": {
+        "$ref": "#/entities/MonthlyReport"
+      },
+      "description": "Compiled monthly patrol summary reports owned by authenticated inspectors."
+    }
+  }
+}

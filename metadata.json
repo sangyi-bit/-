@@ -1,0 +1,6 @@
+{
+  "name": "巡堂紀實｜校園巡檢與月報系統",
+  "description": "拍照辨識班級與校園場域，搭配語音口述重點自動彙整為巡堂紀錄表單，並一鍵生成每月巡檢彙整報表。",
+  "requestFramePermissions": ["camera", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
